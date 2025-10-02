@@ -9,6 +9,7 @@ const _elements = {
   ),
   yearSelectList: document.querySelector(".year-select-list"),
   selectOptions: document.querySelectorAll(".year-select-list__item"),
+  statusTable: document.querySelector(".status-table"),
 };
 
 const driversData = [];
@@ -74,20 +75,44 @@ const dataRequest = async () => {
         abreviation: driver.Driver.code || "",
         position: Number(driver.position),
         points: Number(driver.points),
-        team: driver.Constructor.name
+        team: driver.Constructor.name,
       };
-
       driversData.push(registro);
     }
-
-    console.log(driversData);
-
   } catch (error) {
     console.error("Erro ao buscar dados:", error);
   }
 };
 
-dataRequest();
+const buildDriversTable = (data) => {
+  _elements.statusTable.innerHTML = '';
+  let row = `<tr>
+              <th>Nome</th>
+              <th>Abreviação</th>
+              <th>Posição</th>
+              <th>Pontos</th>
+              <th>Time</th>
+            </tr>`
+  _elements.statusTable.innerHTML = row
+  for (const driver of data) {
+    let row = `<tr>
+               <td>${driver.name}</td>
+               <td>${driver.abreviation}</td>
+               <td>${driver.position}</td>
+               <td>${driver.points}</td>
+               <td>${driver.team}</td>
+             </tr>`;
+
+    _elements.statusTable.innerHTML += row
+  }
+}
+
+const init = async () => {
+    await dataRequest(); 
+    buildDriversTable(driversData); 
+};
+
+init();
 
 const request = async (year) => {
   try {
@@ -96,11 +121,11 @@ const request = async (year) => {
 
     const dataDrivers = await fetch(urlDrivers);
     const dataTeams = await fetch(urlTeams);
-    const jsonDrivers = await dataDrivers.json;
-    const jsonTeams = await dataTeams.json;
+    const jsonDrivers = await dataDrivers.json();
+    const jsonTeams = await dataTeams.json();
 
-    return jsonDrivers, jsonTeams;
-  } catch (e) {
-    console.log(e);
+    return { jsonDrivers, jsonTeams };
+  } catch (error) {
+    console.log(error);
   }
 };
