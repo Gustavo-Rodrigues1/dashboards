@@ -9,7 +9,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
     <link rel="stylesheet" href="../css/styles.css" />
-    <script src="../js/index.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    />
   </head>
   <body>
     <div class="loading loading--hide">
@@ -47,59 +50,86 @@
     </nav>
     <div class="container">
       <div class="status-box">
-        <div class="card-wrapper">
-          <ul class="card-list">
-            <li class="card-item">
-              <img
-                src="https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2025/redbullracing/maxver01/2025redbullracingmaxver01right.webp"
-                alt="Max Verstappen"
-              />
-              <i class="fa-solid fa-crown"></i>
-              <span>Max Verstappen</span>
-            </li>
-          </ul>
-        </div>
-        <div class="status-table_year-select">
-          <div class="year-select">
-            <div class="year-select-toggle">
-              <span class="year-select-toggle__selected-year">2025</span>
-              <i class="fas fa-chevron-down year-select-toggle__icon"></i>
-            </div>
-            <div class="year-select-list">
-              <ul>
-                <li class="year-select-list__item">2025</li>
-                <li class="year-select-list__item">2024</li>
-                <li class="year-select-list__item">2023</li>
-                <li class="year-select-list__item">2022</li>
-                <li class="year-select-list__item">2021</li>
-                <li class="year-select-list__item">2020</li>
-                <li class="year-select-list__item">2019</li>
-                <li class="year-select-list__item">2018</li>
-                <li class="year-select-list__item">2017</li>
-                <li class="year-select-list__item">2016</li>
-                <li class="year-select-list__item">2015</li>
-                <li class="year-select-list__item">2014</li>
-                <li class="year-select-list__item">2013</li>
-                <li class="year-select-list__item">2012</li>
-                <li class="year-select-list__item">2011</li>
-                <li class="year-select-list__item">2010</li>
-                <li class="year-select-list__item">2009</li>
-                <li class="year-select-list__item">2008</li>
-                <li class="year-select-list__item">2007</li>
-                <li class="year-select-list__item">2006</li>
-                <li class="year-select-list__item">2005</li>
-                <li class="year-select-list__item">2004</li>
-                <li class="year-select-list__item">2003</li>
-                <li class="year-select-list__item">2002</li>
-                <li class="year-select-list__item">2001</li>
-                <li class="year-select-list__item">2000</li>
-              </ul>
+        <div class="container-swipper swiper">
+          <div class="card-wrapper">
+            <ul class="card-list swiper-wrapper">
+              <li class="card-item swiper-slide">
+                <img
+                  class="card-image"
+                  src="https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2025/mclaren/oscpia01/2025mclarenoscpia01right.webp"
+                  alt="Oscar Piastri"
+                />
+                <i class="fa-solid fa-crown"></i>
+                <span>Oscar Piastri</span>
+              </li>
+              <li class="card-item swiper-slide">
+                <img
+                  class="card-image"
+                  src="https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2025/mclaren/lannor01/2025mclarenlannor01right.webp"
+                  alt="Lando Norris"
+                />
+                <i class="fa-solid fa-crown"></i>
+                <span>Lando Norris</span>
+              </li>
+              <li class="card-item swiper-slide">
+                <img
+                  class="card-image"
+                  src="https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000000/common/f1/2025/redbullracing/maxver01/2025redbullracingmaxver01right.webp"
+                  alt="Max Verstappen"
+                />
+                <i class="fa-solid fa-crown"></i>
+                <span>Max Verstappen</span>
+              </li>
+            </ul>
+            <div class="swiper-buttons">
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
             </div>
           </div>
-            <div class="status-table-scroll-wrapper">
-              <table class="status-table">
-              </table>
+        </div>
+        <div class="status-table_year-select">
+          <div class="year-select-bar">
+            <div class="year-select">
+              <div class="year-select-toggle">
+                <span class="year-select-toggle__selected-year">2025</span>
+                <i class="fas fa-chevron-down year-select-toggle__icon"></i>
+              </div>
+              <div class="year-select-list">
+                <ul>
+                  <li class="year-select-list__item">2025</li>
+                  <li class="year-select-list__item">2024</li>
+                  <li class="year-select-list__item">2023</li>
+                  <li class="year-select-list__item">2022</li>
+                  <li class="year-select-list__item">2021</li>
+                  <li class="year-select-list__item">2020</li>
+                  <li class="year-select-list__item">2019</li>
+                  <li class="year-select-list__item">2018</li>
+                  <li class="year-select-list__item">2017</li>
+                  <li class="year-select-list__item">2016</li>
+                  <li class="year-select-list__item">2015</li>
+                  <li class="year-select-list__item">2014</li>
+                  <li class="year-select-list__item">2013</li>
+                  <li class="year-select-list__item">2012</li>
+                  <li class="year-select-list__item">2011</li>
+                  <li class="year-select-list__item">2010</li>
+                  <li class="year-select-list__item">2009</li>
+                  <li class="year-select-list__item">2008</li>
+                  <li class="year-select-list__item">2007</li>
+                  <li class="year-select-list__item">2006</li>
+                  <li class="year-select-list__item">2005</li>
+                  <li class="year-select-list__item">2004</li>
+                  <li class="year-select-list__item">2003</li>
+                  <li class="year-select-list__item">2002</li>
+                  <li class="year-select-list__item">2001</li>
+                  <li class="year-select-list__item">2000</li>
+                </ul>
+              </div>
             </div>
+          </div>
+          <div class="status-table-scroll-wrapper">
+            <table class="status-table"></table>
+          </div>
         </div>
       </div>
     </div>
@@ -109,5 +139,7 @@
         <p class="footer-text__copyright">Desenvolvido</p>
       </div>
     </footer>
+    <script src="../js/index.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   </body>
 </html>
