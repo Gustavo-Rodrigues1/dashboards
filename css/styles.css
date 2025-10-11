@@ -7,6 +7,7 @@
 :root {
   --ff: "Inter", sans-serif;
   --transition: all 0.3s ease;
+  --shadow:inset: 0 1px 2px #ffffff50, 0 4px 6px #00000030, 0 6px 10px #00000015;
 }
 
 [data-theme="light"] {
@@ -51,8 +52,12 @@ body {
   min-height: 9rem;
   padding: 0 5rem;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
+}
+
+.nav-logo {
+  align-self: center;
 }
 
 .mobile-nav-list {
@@ -75,14 +80,49 @@ body {
   list-style: none;
   display: flex;
   margin-left: 100px;
-  align-items: center;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-height: 50px;
+  height: 100%;
+}
+
+.side-bar {
+  display: flex;
+  align-items: stretch;
 }
 
 .nav-list li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+  height: 100%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-list .nav-guide:hover {
+  background-color: var(--clr-card-hover);
+}
+
+.nav-list {
+  box-shadow: var(--shadow);
+}
+
+.nav-guide {
   letter-spacing: 3px;
-  margin-left: 60px;
   font-size: 14px;
   font-weight: bold;
+  padding: 10px 20px;
+  width: auto;
+  height: 100%;
+  background: var(--clr-card);
+  clip-path: polygon(
+    20px 0,
+    calc(100% - 0px) 0,
+    calc(100% - 20px) 100%,
+    0 100%
+  );
 }
 
 #theme-switch {
