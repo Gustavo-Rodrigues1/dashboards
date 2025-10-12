@@ -7,7 +7,9 @@
 :root {
   --ff: "Inter", sans-serif;
   --transition: all 0.3s ease;
-  --shadow:inset: 0 1px 2px #ffffff50, 0 4px 6px #00000030, 0 6px 10px #00000015;
+  --shadow: inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015;
+  --shadow-hover: inset 0 1px 2px #ffffff50, 0 4px 6px #00000030,
+    0 6px 10px #00000015;
 }
 
 [data-theme="light"] {
@@ -15,6 +17,7 @@
   --clr-card-hover: #9b9b9bc5;
   --clr-font: #111827;
   --clr-card: #d1d1d1c5;
+  --clr-card-up: #d1d1d1c7;
   --ff: "Cairo", sans-serif;
   --ts-caption: 600 1.8rem/1 var(--ff);
   --ts-normal-text: 400 1.6rem/1.4 var(--ff);
@@ -27,6 +30,7 @@
   --clr-card-hover: #1a1b24;
   --clr-font: #ffffff;
   --clr-card: #1e202a;
+  --clr-card-up: #1e202c;
   --ff: "Cairo", sans-serif;
   --ts-caption: 600 1.8rem/1 var(--ff);
   --ts-normal-text: 400 1.6rem/1.4 var(--ff);
@@ -60,6 +64,10 @@ body {
   align-self: center;
 }
 
+.nav-logo svg {
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.6));
+}
+
 .mobile-nav-list {
   height: 50px;
   width: 50px;
@@ -79,11 +87,12 @@ body {
 .nav-list {
   list-style: none;
   display: flex;
-  margin-left: 100px;
   align-items: stretch;
   justify-content: flex-end;
   min-height: 50px;
   height: 100%;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.188))
+    drop-shadow(0 0 4px rgba(0, 0, 0, 0.082));
 }
 
 .side-bar {
@@ -95,46 +104,70 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 2rem;
+  padding: 0 4rem;
   height: 100%;
-  cursor: pointer;
   transition: var(--transition);
 }
 
-.nav-list .nav-guide:hover {
-  background-color: var(--clr-card-hover);
-}
-
-.nav-list {
-  box-shadow: var(--shadow);
+.nav-list li + li {
+  margin-left: -18px; /* sobrepõe 10px do trapézio anterior */
 }
 
 .nav-guide {
+  background: var(--clr-card-up);
   letter-spacing: 3px;
   font-size: 14px;
   font-weight: bold;
   padding: 10px 20px;
   width: auto;
   height: 100%;
-  background: var(--clr-card);
   clip-path: polygon(
     20px 0,
     calc(100% - 0px) 0,
     calc(100% - 20px) 100%,
     0 100%
   );
+  cursor: pointer;
+}
+
+.nav-list .nav-guide:hover {
+  background: var(--clr-card-hover);
+  transition: var(--transition);
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.188))
+    drop-shadow(0 0 4px rgba(0, 0, 0, 0.082));
+}
+
+.nav-theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--clr-card-up);
+  transition: var(--transition);
+  font-weight: bold;
+  padding: 10px 20px;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(20px 0, calc(100% - 0px) 0, 100% 100%, 0 100%);
 }
 
 #theme-switch {
+  border: none;
+  background: var(--clr-card-up);
+  box-shadow: var(--shadow);
   height: 50px;
   width: 50px;
   padding: 0;
   border-radius: 50%;
-  background-color: var(--clr-background);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+#theme-switch:hover {
+  background: var(--clr-card-hover);
+  box-shadow: var(--shadow-hover);
+  transition: var(--transition);
 }
 
 #theme-switch i {
@@ -190,10 +223,9 @@ body {
 }
 
 .status-box {
+  box-shadow: var(--shadow);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: solid;
-  border-color: var(--clr-card);
   margin: 7rem 20rem;
   justify-content: space-between;
   align-items: center;
@@ -233,6 +265,7 @@ body {
 }
 
 .year-select {
+  box-shadow: var(--shadow);
   font: var(--ts-normal-semibold);
   background-color: var(--clr-card);
   transition: var(--transition);
@@ -255,6 +288,8 @@ body {
 
 .year-select-toggle:hover {
   background-color: var(--clr-card-hover);
+  box-shadow: var(--shadow-hover);
+  transition: var(--transition);
 }
 
 .year-select-toggle__selected-year {
