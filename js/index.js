@@ -63,22 +63,26 @@ _elements.selectOptions.forEach((item) => {
 
 const dataRequest = async () => {
   try {
-    const url = `https://api.jolpi.ca/ergast/f1/2025/last/results/`;
+    const url = `https://api.jolpi.ca/ergast/f1/2025/driverStandings.json`;
     const response = await fetch(url);
     const jsonResponse = await response.json();
 
-    const dataDrivers = jsonResponse.MRData.RaceTable.Races[0].Results;
+    const dataDrivers =
+      jsonResponse.MRData.StandingsTable.StandingsLists[0].DriverStandings;
 
     for (let driver of dataDrivers) {
       const registro = {
-        name: driver.Driver.givenName + " " + driver.Driver.familyName,
+        name: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
         abreviation: driver.Driver.code || "",
         position: Number(driver.position),
-        points: Number(driver.points),
-        team: driver.Constructor.name,
+        points: Number(driver.points), // Pontuação total atual no campeonato
+        team: driver.Constructors[0].name,
       };
       driversData.push(registro);
     }
+
+    console.log(driversData);
+    return driversData;
   } catch (error) {
     console.error("Erro ao buscar dados:", error);
   }

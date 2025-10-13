@@ -54,7 +54,7 @@ body {
   background-color: var(--clr-card);
   transition: var(--transition);
   min-height: 9rem;
-  padding: 0 5rem;
+  padding: 0 0 0 5rem;
   display: flex;
   align-items: stretch;
   justify-content: space-between;
@@ -104,13 +104,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4rem;
   height: 100%;
   transition: var(--transition);
 }
 
 .nav-list li + li {
-  margin-left: -18px; /* sobrepõe 10px do trapézio anterior */
+  margin-left: -18px;
 }
 
 .nav-guide {
@@ -119,7 +118,7 @@ body {
   font-size: 14px;
   font-weight: bold;
   padding: 10px 20px;
-  width: auto;
+  width: 20rem;
   height: 100%;
   clip-path: polygon(
     20px 0,
@@ -253,6 +252,13 @@ body {
   object-fit: contain;
 }
 
+.swiper-buttons div {
+  color: var(--clr-font);
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.188))
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.188))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.082));
+}
+
 .stats-table_year-select {
   align-items: center;
   justify-content: center;
@@ -306,6 +312,7 @@ body {
 }
 
 .year-select-list {
+  box-shadow: var(--shadow);
   position: absolute;
   max-height: 0;
   overflow-y: scroll;
@@ -328,6 +335,7 @@ body {
 }
 
 .year-select-list li:hover {
+  box-shadow: var(--shadow-hover);
   background-color: var(--clr-card-hover);
 }
 
@@ -374,10 +382,16 @@ footer {
 }
 
 @media screen and (max-width: 810px) {
+  .navbar {
+    padding: 0 5rem;
+  }
+
   .container {
     grid-template-columns: 2fr 1fr 1fr;
   }
+
   .side-bar {
+    box-shadow: var(--shadow);
     position: fixed;
     top: 0;
     right: -100%;
@@ -387,26 +401,50 @@ footer {
     transition: right 300ms ease-out;
     background-color: var(--clr-card);
   }
+
   .side-bar.show {
     right: 0;
   }
 
   .nav-list {
+    background-color: var(--clr-card);
     width: 100%;
     flex-direction: column;
     margin-left: 0;
     justify-content: space-around;
     height: 100%;
-    padding: 2rem 0;
+    padding: 9rem 0 0 0;
+  }
+
+  .nav-guide {
+    width: 100%;
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+  }
+
+  .nav-list li + li {
+    margin-left: 0px;
+  }
+
+  .nav-theme-switch {
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
   }
 
   .nav-list li {
     margin-left: 0;
-    padding: 1rem 0;
   }
 
   .mobile-nav-list {
+    border: none;
+    background: var(--clr-card-up);
+    box-shadow: var(--shadow);
+    align-self: center;
     display: flex;
     z-index: 11;
+  }
+
+  .mobile-nav-list:hover {
+    background: var(--clr-card-hover);
+    box-shadow: var(--shadow-hover);
+    transition: var(--transition);
   }
 }
