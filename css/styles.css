@@ -27,10 +27,10 @@
 
 [data-theme="dark"] {
   --clr-background: #111827;
-  --clr-card-hover: #1a1b24;
+  --clr-card-hover: #1a1b24c5;
   --clr-font: #ffffff;
-  --clr-card: #1e202a;
-  --clr-card-up: #1e202c;
+  --clr-card: #1e202ace;
+  --clr-card-up: #1e202cc5;
   --ff: "Cairo", sans-serif;
   --ts-caption: 600 1.8rem/1 var(--ff);
   --ts-normal-text: 400 1.6rem/1.4 var(--ff);
@@ -268,6 +268,30 @@ body {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  gap: 2rem;
+}
+
+.teams-change-table,
+.drivers-change-table {
+  box-shadow: var(--shadow);
+  font: var(--ts-normal-semibold);
+  background-color: var(--clr-card);
+  transition: var(--transition);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  display: flex;
+  min-width: 5rem;
+  border-radius: 2rem;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.teams-change-table:hover,
+.drivers-change-table:hover {
+  background-color: var(--clr-card-hover);
+  box-shadow: var(--shadow-hover);
+  transition: var(--transition);
 }
 
 .year-select {
@@ -277,7 +301,7 @@ body {
   transition: var(--transition);
   display: inline-block;
   min-width: 5rem;
-  margin: 1rem 6rem;
+  margin: 0rem 6rem 1rem 0rem;
   border-radius: 2rem;
   position: relative;
 }
@@ -290,6 +314,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  transition: var(--transition);
 }
 
 .year-select-toggle:hover {
@@ -353,6 +378,7 @@ body {
 }
 
 .status-table {
+  background-color: var(--clr-card);
   align-items: center;
   justify-content: center;
   transition: var(--transition);
@@ -362,8 +388,10 @@ body {
 
 .status-table td,
 .status-table th {
+  background-color: var(--clr-card);
   padding: 3px 4px;
   font-weight: bold;
+  transition: var(--transition);
 }
 
 footer {

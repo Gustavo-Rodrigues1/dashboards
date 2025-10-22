@@ -12,16 +12,66 @@ const _elements = {
   statusTable: document.querySelector(".status-table"),
 };
 
-const driversData = [];
+const teamsData = {
+  name: String,
+  position: Number,
+  points: Number,
+};
 
-const teamsData = [
-  {
-    name: String,
-    position: Number,
-    points: Number,
-  },
-];
+const dataRequest = async (year) => {
+  try {
+    const url = `https://api.jolpi.ca/ergast/f1/${year}/driverstandings`;
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
 
+    const dataDrivers =
+      jsonResponse.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+    const newDriversData = [];
+
+    for (let driver of dataDrivers) {
+      const registro = {
+        name: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
+        abreviation: driver.Driver.code || "",
+        position: Number(driver.position),
+        points: Number(driver.points),
+        team: driver.Constructors[0].name,
+      };
+      newDriversData.push(registro);
+    }
+
+    console.log(newDriversData);
+    return newDriversData;
+  } catch (error) {
+    console.error("Erro ao buscar dados:", error);
+    return [];
+  }
+};
+
+const buildDriversTable = (data) => {
+  _elements.statusTable.innerHTML = "";
+  let row = `<tr>
+              <th>Nome</th>
+              <th>Abreviação</th>
+              <th>Posição</th>
+              <th>Pontos</th>
+              <th>Time</th>
+            </tr>`;
+  _elements.statusTable.innerHTML = row;
+  for (const driver of data) {
+    let row = `<tr>
+               <td>${driver.name}</td>
+               <td>${driver.abreviation}</td>
+               <td>${driver.position}</td>
+               <td>${driver.points}</td>
+               <td>${driver.team}</td>
+             </tr>`;
+
+    _elements.statusTable.innerHTML += row;
+  }
+};
+
+// botão de troca de tema
 let darkmode = localStorage.getItem("darkmode");
 
 const enableDarkmode = () => {
@@ -42,7 +92,8 @@ _elements.themeSwitch.addEventListener("click", () => {
   darkmode = localStorage.getItem("darkmode");
   darkmode !== "true" ? enableDarkmode() : disableDarkmode();
 });
-
+//
+// botao de menu hamburguer
 _elements.hamburguerMenu.addEventListener("click", () => {
   _elements.sideBar.classList.toggle("show");
 });
@@ -55,99 +106,37 @@ _elements.yearSelectToggle.addEventListener("click", () => {
 });
 
 _elements.selectOptions.forEach((item) => {
-  item.addEventListener("click", () => {
-    _elements.yearSelectToggleSelected.innerText = item.innerText;
+  item.addEventListener("click", async () => {
+    let yearSelected = item.innerText;
+    _elements.yearSelectToggleSelected.innerText = yearSelected;
     _elements.yearSelectToggle.dispatchEvent(new Event("click"));
+    const updatedDriversData = await dataRequest(yearSelected);
+    buildDriversTable(updatedDriversData);
   });
 });
-
-const dataRequest = async () => {
-  try {
-    const url = `https://api.jolpi.ca/ergast/f1/2025/driverStandings.json`;
-    const response = await fetch(url);
-    const jsonResponse = await response.json();
-
-    const dataDrivers =
-      jsonResponse.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-
-    for (let driver of dataDrivers) {
-      const registro = {
-        name: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
-        abreviation: driver.Driver.code || "",
-        position: Number(driver.position),
-        points: Number(driver.points), // Pontuação total atual no campeonato
-        team: driver.Constructors[0].name,
-      };
-      driversData.push(registro);
-    }
-
-    console.log(driversData);
-    return driversData;
-  } catch (error) {
-    console.error("Erro ao buscar dados:", error);
-  }
-};
-
-const buildDriversTable = (data) => {
-  _elements.statusTable.innerHTML = '';
-  let row = `<tr>
-              <th>Nome</th>
-              <th>Abreviação</th>
-              <th>Posição</th>
-              <th>Pontos</th>
-              <th>Time</th>
-            </tr>`
-  _elements.statusTable.innerHTML = row
-  for (const driver of data) {
-    let row = `<tr>
-               <td>${driver.name}</td>
-               <td>${driver.abreviation}</td>
-               <td>${driver.position}</td>
-               <td>${driver.points}</td>
-               <td>${driver.team}</td>
-             </tr>`;
-
-    _elements.statusTable.innerHTML += row
-  }
-}
-
-const init = async () => {
-    await dataRequest(); 
-    buildDriversTable(driversData); 
-};
-
-init();
-
-const request = async (year) => {
-  try {
-    const urlDrivers = `https://api.jolpi.ca/ergast/f1/${year}/drivers/`;
-    const urlTeams = `https://api.jolpi.ca/ergast/f1/${year}/teams/`;
-
-    const dataDrivers = await fetch(urlDrivers);
-    const dataTeams = await fetch(urlTeams);
-    const jsonDrivers = await dataDrivers.json();
-    const jsonTeams = await dataTeams.json();
-
-    return { jsonDrivers, jsonTeams };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const swiper = new Swiper('.card-wrapper', {
+//
+// Carrosel
+const swiper = new Swiper(".card-wrapper", {
   // Optional parameters
-  direction: 'horizontal',
+  direction: "horizontal",
   loop: true,
 
   // If we need pagination
   pagination: {
-    el: '.swiper-pagination',
-    clickable: true
+    el: ".swiper-pagination",
+    clickable: true,
   },
 
   // Navigation arrows
   navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
   },
 });
+//
+const init = async () => {
+  const data = await dataRequest('2025');
+  buildDriversTable(data);
+};
+
+init();
