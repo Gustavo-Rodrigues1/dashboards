@@ -18,36 +18,48 @@ const teamsData = {
   points: Number,
 };
 
-const dataRequest = async (year) => {
+const dataRequest = async (year, type) => {
+  const urlEndPoint = (type === 'driver') ? 'driverstandings' : 'constructorstandings';
+  const jsonKey = (type === 'driver') ? 'DriverStandings' : 'ConstructorStandings';
   try {
-    const url = `https://api.jolpi.ca/ergast/f1/${year}/driverstandings`;
+    const url = `https://api.jolpi.ca/ergast/f1/${year}/${urlEndPoint}`;
     const response = await fetch(url);
     const jsonResponse = await response.json();
 
-    const dataDrivers =
-      jsonResponse.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+    const data = jsonResponse.MRData.StandingsTable.StandingsLists[0][jsonKey];
 
-    const newDriversData = [];
+    const newData = [];
 
-    for (let driver of dataDrivers) {
-      const registro = {
-        name: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
-        abreviation: driver.Driver.code || "",
-        position: Number(driver.position),
-        points: Number(driver.points),
-        team: driver.Constructors[0].name,
+    for (let item of data) {
+      let registro;
+
+      if(type === 'driver'){
+      registro = {
+        name: `${item.Driver.givenName} ${item.Driver.familyName}`,
+        abreviation: item.Driver.code || "",
+        position: Number(item.position),
+        points: Number(item.points),
+        team: item.Constructors[0].name,
       };
-      newDriversData.push(registro);
+    } else {
+      registro = {
+        name: item.Constructor.name,
+        position: Number(item.position),
+        points: Number(item.points),
+      }
+    }
+      newData.push(registro);
     }
 
-    console.log(newDriversData);
-    return newDriversData;
+    console.log(newData);
+    return newData;
   } catch (error) {
     console.error("Erro ao buscar dados:", error);
     return [];
   }
 };
-
+//
+//função para construir a tabela de pilotos
 const buildDriversTable = (data) => {
   _elements.statusTable.innerHTML = "";
   let row = `<tr>
@@ -70,7 +82,27 @@ const buildDriversTable = (data) => {
     _elements.statusTable.innerHTML += row;
   }
 };
+//
+//função para construir a tabela de construtores
+const buildTeamsTable = (data) => {
+  _elements.statusTable.innerHTML = "";
+  let row = `<tr>
+              <th>Nome</th>
+              <th>Posição</th>
+              <th>Pontos</th>
+            </tr>`;
+  _elements.statusTable.innerHTML = row;
+  for (const team of data) {
+    let row = `<tr>
+               <td>${team.name}</td>
+               <td>${team.position}</td>
+               <td>${team.points}</td>
+             </tr>`;
 
+    _elements.statusTable.innerHTML += row;
+  }
+};
+//
 // botão de troca de tema
 let darkmode = localStorage.getItem("darkmode");
 
@@ -135,7 +167,7 @@ const swiper = new Swiper(".card-wrapper", {
 });
 //
 const init = async () => {
-  const data = await dataRequest('2025');
+  const data = await dataRequest('2025', 'driver');
   buildDriversTable(data);
 };
 

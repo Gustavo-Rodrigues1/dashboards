@@ -68,6 +68,20 @@ body {
   filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.6));
 }
 
+.dashgoats-logo {
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  min-height: 50px;
+  min-width: 50px;
+}
+
+.dashgoats-logo img {
+  height: 100%;
+  width: 130px;
+}
+
 .mobile-nav-list {
   height: 50px;
   width: 50px;
@@ -244,6 +258,33 @@ body {
   max-height: 360px;
   overflow: hidden;
   margin: 1rem 4rem;
+}
+
+.card-item {
+  position: relative;
+  height: 360px;
+}
+
+.card-item i {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  font-size: 3rem;
+  text-shadow: var(--shadow-hover);
+  height: auto;
+}
+
+.card-list li:nth-child(1) .fa-solid.fa-crown {
+  color: gold;
+}
+
+.card-list li:nth-child(2) .fa-solid.fa-crown {
+  color: silver;
+}
+
+.card-list li:nth-child(3) .fa-solid.fa-crown {
+  color: brown;
 }
 
 .card-image {
