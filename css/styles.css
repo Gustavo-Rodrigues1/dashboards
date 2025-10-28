@@ -10,6 +10,9 @@
   --shadow: inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015;
   --shadow-hover: inset 0 1px 2px #ffffff50, 0 4px 6px #00000030,
     0 6px 10px #00000015;
+  --deep-shadow: inset 0 6px 10px #00000030, 0 2px 4px #00000015,
+    0 -1px 2px #ffffff30;
+  --deep-clr-font: #a3a3a3;
 }
 
 [data-theme="light"] {
@@ -328,8 +331,14 @@ body {
   transition: var(--transition);
 }
 
+.deep__change-table {
+  color: var(--deep-clr-font);
+  box-shadow: var(--deep-shadow);
+}
+
 .teams-change-table:hover,
 .drivers-change-table:hover {
+  color: var(--clr-font);
   background-color: var(--clr-card-hover);
   box-shadow: var(--shadow-hover);
   transition: var(--transition);

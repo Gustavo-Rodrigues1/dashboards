@@ -1,3 +1,4 @@
+//Elementos do HTML
 const _elements = {
   themeSwitch: document.getElementById("theme-switch"),
   hamburguerMenu: document.querySelector(".mobile-nav-list"),
@@ -10,6 +11,8 @@ const _elements = {
   yearSelectList: document.querySelector(".year-select-list"),
   selectOptions: document.querySelectorAll(".year-select-list__item"),
   statusTable: document.querySelector(".status-table"),
+  driversChangeTable: document.querySelector(".drivers-change-table"),
+  teamsChangeTable: document.querySelector(".teams-change-table"),
 };
 
 const teamsData = {
@@ -146,6 +149,27 @@ _elements.selectOptions.forEach((item) => {
     buildDriversTable(updatedDriversData);
   });
 });
+//
+//Botões para trocar de tabelas
+_elements.teamsChangeTable.addEventListener("click", async () => {
+  _elements.teamsChangeTable.classList.remove(
+    "deep__change-table"
+  );
+  _elements.driversChangeTable.classList.add("deep__change-table");
+  let yearSelected = _elements.yearSelectToggleSelected.innerText;
+  const updatedTeamsData = await dataRequest(yearSelected, 'team');
+  buildTeamsTable(updatedTeamsData);
+})
+
+_elements.driversChangeTable.addEventListener("click", async () => {
+  _elements.teamsChangeTable.classList.add(
+    "deep__change-table"
+  );
+  _elements.driversChangeTable.classList.remove("deep__change-table");
+  let yearSelected = _elements.yearSelectToggleSelected.innerText;
+  const updatedDriversData = await dataRequest(yearSelected, 'driver');
+  buildDriversTable(updatedDriversData);
+})
 //
 // Carrosel
 const swiper = new Swiper(".card-wrapper", {
