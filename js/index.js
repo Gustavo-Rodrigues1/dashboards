@@ -145,8 +145,13 @@ _elements.selectOptions.forEach((item) => {
     let yearSelected = item.innerText;
     _elements.yearSelectToggleSelected.innerText = yearSelected;
     _elements.yearSelectToggle.dispatchEvent(new Event("click"));
-    const updatedDriversData = await dataRequest(yearSelected);
+    if(!(_elements.driversChangeTable.classList.contains("deep__change-table"))){
+    const updatedDriversData = await dataRequest(yearSelected, 'driver');
     buildDriversTable(updatedDriversData);
+    } else {
+    const updatedTeamsData = await dataRequest(yearSelected, 'team');
+    buildTeamsTable(updatedTeamsData);
+    }
   });
 });
 //
