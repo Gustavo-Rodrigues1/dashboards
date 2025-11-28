@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: #f5f5f5;
+  --color-card-hover: #9b9b9bc5;
+  --color-font: #111827;
+  --color-card: #d1d1d1c5;
+  --color-card-up: #d1d1d1c7;
+  --font-fontcairo: "Cairo", sans-serif;
+}
+
+.dark {
+  --color-background: #111827;
+  --color-card-hover: #1a1b24c5;
+  --color-font: #ffffff;
+  --color-card: #1e202ace;
+  --color-card-up: #1e202cc5;
+  --ff: "Cairo", sans-serif;
+}
