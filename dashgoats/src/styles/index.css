@@ -2,20 +2,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  transition:
+    background-color 0.5s ease-in-out,
+    color 0.5s ease-in-out;
+}
+
 @theme {
   --color-background: #f5f5f5;
-  --color-card-hover: #9b9b9bc5;
+  --color-card-hover: #9b9b9b;
   --color-font: #111827;
-  --color-card: #d1d1d1c5;
+  --color-card: #d1d1d1;
   --color-card-up: #d1d1d1c7;
+  --color-btn-bg: #e2e2e2;
+  --color-btn-text: #111827;
+  --color-btn-hover: #c4c4c4;
   --font-fontcairo: "Cairo", sans-serif;
+  --shadow-card:
+    inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015;
 }
 
 .dark {
   --color-background: #111827;
-  --color-card-hover: #1a1b24c5;
+  --color-card-hover: #1a1b24;
   --color-font: #ffffff;
-  --color-card: #1e202ace;
-  --color-card-up: #1e202cc5;
-  --ff: "Cairo", sans-serif;
+  --color-card: #1e202a;
+  --color-card-up: #1e202c;
+  --color-btn-bg: #1e202a;
+  --color-btn-text: #ffffff;
+  --color-btn-hover: #2a2d3a;
 }
