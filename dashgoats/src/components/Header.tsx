@@ -4,11 +4,7 @@ import Navbar from './Navbar';
 const Header = () => {
   return (
     <header className="relative flex items-center justify-between px-8 h-[72px] bg-card border-b border-border/20 transition-colors duration-500 ease-in-out">
-
-      {/* Linha decorativa animada */}
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-red-500 via-blue-500 to-red-500 opacity-40 bg-size-[200%_100%] animate-shimmer transition-opacity duration-500 ease-in-out" />
-
-      {/* Logo + nome */}
       <div className="flex items-center gap-3.5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
