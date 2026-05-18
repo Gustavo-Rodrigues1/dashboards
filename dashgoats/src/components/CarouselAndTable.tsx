@@ -1,12 +1,31 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useF1Data } from "../hooks/HomeData";
 
 type Tab = "drivers" | "teams";
 
-const DriversPage = () => {
-  const { drivers, teams, loading, error } = useF1Data();
+interface Driver {
+  name: string;
+  team: string;
+  pts: number;
+  nationality: string;
+  initials: string;
+  color: string;
+}
 
+interface Team {
+  name: string;
+  pts: number;
+  nationality: string;
+  initials: string;
+  color: string;
+}
+
+interface CarouselAndTableProps {
+  drivers: Driver[];
+  teams: Team[];
+}
+
+const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
   const [tab, setTab] = useState<Tab>("drivers");
   const [driverIdx, setDriverIdx] = useState(0);
   const [teamIdx, setTeamIdx] = useState(0);
@@ -20,13 +39,10 @@ const DriversPage = () => {
   const next = () => setCurrent((c) => (c + 1) % items.length);
   const item = items[current];
 
-  if (loading) return <p className="text-font/50 p-6">Carregando...</p>;
-  if (error) return <p className="text-red-500 p-6">{error}</p>;
   if (!item) return null;
 
   return (
     <div className="flex flex-col gap-4 p-6">
-
       {/* Botões de alternância */}
       <div className="flex gap-1 p-1 bg-card rounded-lg border border-font/10 w-fit">
         {(["drivers", "teams"] as Tab[]).map((t) => (
@@ -44,8 +60,7 @@ const DriversPage = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Carrossel */}
         <div className="bg-card rounded-xl border border-font/10 overflow-hidden">
           <div className="px-4 py-3 border-b border-font/10">
@@ -61,12 +76,8 @@ const DriversPage = () => {
             >
               {item.initials}
             </div>
-            <p className="text-base font-medium text-font transition-all duration-500 ease-in-out">
-              {item.name}
-            </p>
-            <p className="text-3xl font-medium text-font mt-4 transition-all duration-500 ease-in-out">
-              {item.pts}
-            </p>
+            <p className="text-base font-medium text-font">{item.name}</p>
+            <p className="text-3xl font-medium text-font mt-4 tabular-nums">{item.pts}</p>
             <p className="text-xs text-font/40 mt-1">pontos</p>
           </div>
 
@@ -79,16 +90,15 @@ const DriversPage = () => {
               <ChevronLeft size={14} />
             </button>
 
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 items-center">
               {items.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
                   className={`rounded-full transition-all duration-300 ease-in-out ${
-                    i === current
-                      ? "w-2 h-2 bg-violet-500 scale-125"
-                      : "w-1.5 h-1.5 bg-font/20"
+                    i === current ? "w-2 h-2 scale-125" : "w-1.5 h-1.5 bg-font/20 hover:bg-font/40"
                   }`}
+                  style={i === current ? { backgroundColor: item.color } : {}}
                 />
               ))}
             </div>
@@ -110,44 +120,43 @@ const DriversPage = () => {
             </span>
           </div>
 
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-font/10">
-                <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest w-8">#</th>
-                <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">
-                  {isDrivers ? "Piloto" : "Time"}
-                </th>
-                <th className="text-right px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((d, i) => (
-                <tr
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className={`border-b border-font/5 last:border-none cursor-pointer transition-colors duration-300 ease-in-out ${
-                    i === current ? "bg-card-hover" : "hover:bg-card-hover"
-                  }`}
-                >
-                  <td className="px-4 py-2.5 font-medium text-font/40">{i + 1}</td>
-                  <td className="px-4 py-2.5 text-font">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ backgroundColor: d.color }}
-                      />
-                      {d.name}
-                    </div>
-                  </td>
-                  <td className="px-4 py-2.5 text-right font-medium text-font">{d.pts}</td>
+          <div className="overflow-y-auto max-h-80">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-card z-10">
+                <tr className="border-b border-font/10">
+                  <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest w-8">#</th>
+                  <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">
+                    {isDrivers ? "Piloto" : "Time"}
+                  </th>
+                  <th className="text-right px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">Pts</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {items.map((d, i) => (
+                  <tr
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    className={`border-b border-font/5 last:border-none cursor-pointer transition-colors duration-300 ease-in-out ${
+                      i === current ? "bg-card-hover" : "hover:bg-card-hover"
+                    }`}
+                  >
+                    <td className="px-4 py-2.5 font-medium text-font/40 tabular-nums">{i + 1}</td>
+                    <td className="px-4 py-2.5 text-font">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+                        <span className={i === current ? "font-medium" : ""}>{d.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 text-right font-medium text-font tabular-nums">{d.pts}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default DriversPage;
+export default CarouselAndTable;
