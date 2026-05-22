@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { TEAM_COLORS } from "../constants/ConstantsF1";
 
 interface DriverDetail {
   name: string;
   team: string;
   pts: number;
   wins: number;
+  photoUrl?: string | null;
   podiums: number;
   poles: number;
   dnfs: number;
@@ -16,19 +18,6 @@ interface DriverDetail {
   positions: { round: string; position: number }[];
 }
 
-const TEAM_COLORS: Record<string, string> = {
-  "Red Bull": "#3671C6",
-  "Ferrari": "#E8002D",
-  "McLaren": "#FF8000",
-  "Mercedes": "#27F4D2",
-  "Aston Martin": "#358C75",
-  "Williams": "#64C4FF",
-  "RB F1 Team": "#6692FF",
-  "Haas F1 Team": "#B6BABD",
-  "Alpine F1 Team": "#FF87BC",
-  "Kick Sauber": "#52E252",
-};
-
 export const useDriversData = () => {
   const [drivers, setDrivers] = useState<DriverDetail[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,19 +26,36 @@ export const useDriversData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [standingsRes, resultsRes, qualiRes] = await Promise.all([
-          fetch("https://api.jolpi.ca/ergast/f1/current/driverStandings.json"),
-          fetch("https://api.jolpi.ca/ergast/f1/current/results.json?limit=500"),
-          fetch("https://api.jolpi.ca/ergast/f1/current/qualifying.json?limit=500"),
-        ]);
+        const [standingsRes, resultsRes, qualiRes, photoRes] =
+          await Promise.all([
+            fetch(
+              "https://api.jolpi.ca/ergast/f1/current/driverStandings.json",
+            ),
+            fetch(
+              "https://api.jolpi.ca/ergast/f1/current/results.json?limit=500",
+            ),
+            fetch(
+              "https://api.jolpi.ca/ergast/f1/current/qualifying.json?limit=500",
+            ),
+            fetch("https://api.openf1.org/v1/drivers?session_key=latest"),
+          ]);
 
         const standingsJson = await standingsRes.json();
         const resultsJson = await resultsRes.json();
         const qualiJson = await qualiRes.json();
+        const photoJson = await photoRes.json();
 
-        const standings = standingsJson.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+        const standings =
+          standingsJson.MRData.StandingsTable.StandingsLists[0].DriverStandings;
         const races = resultsJson.MRData.RaceTable.Races;
         const qualiRaces = qualiJson.MRData.RaceTable.Races;
+
+        const photoMap: Record<string, string> = {};
+        photoJson.forEach((d: any) => {
+          if (d.headshot_url) {
+            photoMap[d.full_name.toLowerCase()] = d.headshot_url;
+          }
+        });
 
         // Mapa de poles por driverId
         const polesMap: Record<string, number> = {};
@@ -62,20 +68,25 @@ export const useDriversData = () => {
         });
 
         // Mapa de stats por driverId
-        const statsMap: Record<string, {
-          podiums: number;
-          dnfs: number;
-          positions: { round: string; position: number }[];
-        }> = {};
+        const statsMap: Record<
+          string,
+          {
+            podiums: number;
+            dnfs: number;
+            positions: { round: string; position: number }[];
+          }
+        > = {};
 
         races.forEach((race: any) => {
           race.Results.forEach((r: any) => {
             const id = r.Driver.driverId;
-            if (!statsMap[id]) statsMap[id] = { podiums: 0, dnfs: 0, positions: [] };
+            if (!statsMap[id])
+              statsMap[id] = { podiums: 0, dnfs: 0, positions: [] };
 
             const pos = parseInt(r.position);
             if (pos <= 3) statsMap[id].podiums += 1;
-            if (r.status !== "Finished" && !r.status.startsWith("+")) statsMap[id].dnfs += 1;
+            if (r.status !== "Finished" && !r.status.startsWith("+"))
+              statsMap[id].dnfs += 1;
 
             statsMap[id].positions.push({
               round: `R${race.round}`,
@@ -86,13 +97,19 @@ export const useDriversData = () => {
 
         setDrivers(
           standings.map((d: any) => {
+            const fullName = `${d.Driver.givenName} ${d.Driver.familyName}`.toLowerCase();
             const id = d.Driver.driverId;
-            const stats = statsMap[id] ?? { podiums: 0, dnfs: 0, positions: [] };
+            const stats = statsMap[id] ?? {
+              podiums: 0,
+              dnfs: 0,
+              positions: [],
+            };
             return {
               name: `${d.Driver.givenName} ${d.Driver.familyName}`,
               team: d.Constructors[0].name,
               pts: Number(d.points),
               wins: Number(d.wins),
+              photoUrl: photoMap[fullName] ?? null,
               podiums: stats.podiums,
               poles: polesMap[id] ?? 0,
               dnfs: stats.dnfs,
@@ -103,7 +120,7 @@ export const useDriversData = () => {
               number: d.Driver.permanentNumber ?? "",
               positions: stats.positions,
             };
-          })
+          }),
         );
       } catch (err) {
         setError("Erro ao buscar dados dos pilotos.");

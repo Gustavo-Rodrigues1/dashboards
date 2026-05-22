@@ -2,39 +2,47 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Header from "../components/Header";
 import { useDriversData } from "../hooks/DriversData";
+import { FLAG_URL } from "../constants/ConstantsF1";
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, ReferenceLine,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 
-const FLAG_URL = (nationality: string) =>
-  `https://flagcdn.com/24x18/${NATIONALITY_TO_CODE[nationality] ?? "un"}.png`;
-
-const NATIONALITY_TO_CODE: Record<string, string> = {
-  British: "gb", Dutch: "nl", Monegasque: "mc", Spanish: "es",
-  Australian: "au", Mexican: "mx", German: "de", Finnish: "fi",
-  French: "fr", Canadian: "ca", Japanese: "jp", Thai: "th",
-  Chinese: "cn", Danish: "dk", American: "us", Brazilian: "br",
-  Argentine: "ar", Austrian: "at", Italian: "it", Polish: "pl",
-};
-
-const StatBox = ({ label, value, color }: { label: string; value: number | string; color?: string }) => (
+const StatBox = ({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number | string;
+  color?: string;
+}) => (
   <div className="flex flex-col items-center gap-1 bg-background rounded-lg px-4 py-3 border border-font/10">
-    <span className="text-xl font-semibold tabular-nums" style={{ color }}>{value}</span>
-    <span className="text-[11px] text-font/40 uppercase tracking-widest">{label}</span>
+    <span className="text-xl font-semibold tabular-nums" style={{ color }}>
+      {value}
+    </span>
+    <span className="text-[11px] text-font/40 uppercase tracking-widest">
+      {label}
+    </span>
   </div>
 );
 
 const Pilotos = () => {
   const { drivers, loading, error } = useDriversData();
-  const [selected, setSelected] = useState<typeof drivers[0] | null>(null);
-  const [compareA, setCompareA] = useState<typeof drivers[0] | null>(null);
-  const [compareB, setCompareB] = useState<typeof drivers[0] | null>(null);
+  const [selected, setSelected] = useState<(typeof drivers)[0] | null>(null);
+  const [compareA, setCompareA] = useState<(typeof drivers)[0] | null>(null);
+  const [compareB, setCompareB] = useState<(typeof drivers)[0] | null>(null);
   const [compareMode, setCompareMode] = useState(false);
 
-  const handleCompareSelect = (driver: typeof drivers[0]) => {
+  const handleCompareSelect = (driver: (typeof drivers)[0]) => {
     if (!compareA) return setCompareA(driver);
-    if (!compareB && driver.driverId !== compareA.driverId) return setCompareB(driver);
+    if (!compareB && driver.driverId !== compareA.driverId)
+      return setCompareB(driver);
   };
 
   const resetCompare = () => {
@@ -42,32 +50,38 @@ const Pilotos = () => {
     setCompareB(null);
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
-      <p className="text-font/40 text-sm">Carregando pilotos...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <p className="text-font/40 text-sm">Carregando pilotos...</p>
+      </div>
+    );
 
-  if (error) return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
-      <p className="text-red-500 text-sm">{error}</p>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <p className="text-red-500 text-sm">{error}</p>
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <div className="p-6 flex flex-col gap-6">
-
         {/* Cabeçalho da página */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold text-font">Pilotos</h1>
-            <p className="text-sm text-font/40 mt-0.5">Temporada 2025 — {drivers.length} pilotos</p>
+            <p className="text-sm text-font/40 mt-0.5">
+              Pilotos {new Date().getFullYear()} — {drivers.length} pilotos
+            </p>
           </div>
           <button
-            onClick={() => { setCompareMode(!compareMode); resetCompare(); }}
+            onClick={() => {
+              setCompareMode(!compareMode);
+              resetCompare();
+            }}
             className={`px-4 py-1.5 rounded-md text-sm font-medium border transition-all duration-300 ease-in-out ${
               compareMode
                 ? "bg-font text-background border-font"
@@ -81,24 +95,53 @@ const Pilotos = () => {
         {/* Banner de comparação */}
         {compareMode && (
           <div className="bg-card rounded-xl border border-font/10 px-4 py-3 flex items-center gap-3 text-sm text-font/50">
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
-              style={{ backgroundColor: (compareA?.color ?? "#888") + "22", color: compareA?.color ?? "#888" }}
-            >
-              {compareA?.initials ?? "?"}
-            </div>
+            {compareA?.photoUrl ? (
+              <img
+                src={compareA.photoUrl}
+                alt={compareA.name}
+                className="w-16 h-16 rounded-full object-cover border border-font/10"
+              />
+            ) : (
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                style={{
+                  backgroundColor: compareA?.color + "22",
+                  color: compareA?.color,
+                }}
+              >
+                {compareA?.initials}
+              </div>
+            )}
             <span className="text-font/30">vs</span>
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
-              style={{ backgroundColor: (compareB?.color ?? "#888") + "22", color: compareB?.color ?? "#888" }}
-            >
-              {compareB?.initials ?? "?"}
-            </div>
+            {compareB?.photoUrl ? (
+              <img
+                src={compareB.photoUrl}
+                alt={compareB?.name}
+                className="w-16 h-16 rounded-full object-cover border border-font/10"
+              />
+            ) : (
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                style={{
+                  backgroundColor: compareB?.color + "22",
+                  color: compareB?.color,
+                }}
+              >
+                {compareB?.initials}
+              </div>
+            )}
             <span className="ml-1">
-              {!compareA ? "Selecione o primeiro piloto" : !compareB ? "Selecione o segundo piloto" : `${compareA.name} vs ${compareB.name}`}
+              {!compareA
+                ? "Selecione o primeiro piloto"
+                : !compareB
+                  ? "Selecione o segundo piloto"
+                  : `${compareA.name} vs ${compareB.name}`}
             </span>
             {compareA && compareB && (
-              <button onClick={resetCompare} className="ml-auto text-font/40 hover:text-font transition-colors duration-300">
+              <button
+                onClick={resetCompare}
+                className="ml-auto text-font/40 hover:text-font transition-colors duration-300"
+              >
                 Limpar
               </button>
             )}
@@ -109,17 +152,33 @@ const Pilotos = () => {
         {compareMode && compareA && compareB && (
           <div className="bg-card rounded-xl border border-font/10 overflow-hidden">
             <div className="px-4 py-3 border-b border-font/10">
-              <span className="text-[11px] font-medium text-font/40 uppercase tracking-widest">Comparação</span>
+              <span className="text-[11px] font-medium text-font/40 uppercase tracking-widest">
+                Comparação
+              </span>
             </div>
             <div className="grid grid-cols-2 divide-x divide-font/10">
               {[compareA, compareB].map((d) => (
-                <div key={d.driverId} className="flex flex-col items-center px-6 py-6 gap-4">
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
-                    style={{ backgroundColor: d.color + "22", color: d.color }}
-                  >
-                    {d.initials}
-                  </div>
+                <div
+                  key={d.driverId}
+                  className="flex flex-col items-center px-6 py-6 gap-4"
+                >
+                  {d.photoUrl ? (
+                    <img
+                      src={d.photoUrl}
+                      alt={d.name}
+                      className="w-16 h-16 rounded-full object-cover border border-font/10"
+                    />
+                  ) : (
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                      style={{
+                        backgroundColor: d.color + "22",
+                        color: d.color,
+                      }}
+                    >
+                      {d.initials}
+                    </div>
+                  )}
                   <div className="text-center">
                     <p className="font-semibold text-font">{d.name}</p>
                     <p className="text-xs text-font/40 mt-0.5">{d.team}</p>
@@ -143,27 +202,49 @@ const Pilotos = () => {
           {drivers.map((d, i) => (
             <div
               key={d.driverId}
-              onClick={() => compareMode ? handleCompareSelect(d) : setSelected(d)}
+              onClick={() =>
+                compareMode ? handleCompareSelect(d) : setSelected(d)
+              }
               className={`flex items-center gap-4 px-4 py-3 bg-card rounded-xl border transition-all duration-300 ease-in-out cursor-pointer ${
-                compareMode && (compareA?.driverId === d.driverId || compareB?.driverId === d.driverId)
+                compareMode &&
+                (compareA?.driverId === d.driverId ||
+                  compareB?.driverId === d.driverId)
                   ? "border-font/40 bg-card-hover"
                   : "border-font/10 hover:bg-card-hover hover:border-font/20"
               }`}
             >
               {/* Posição */}
-              <span className="text-sm font-medium text-font/30 w-5 tabular-nums">{i + 1}</span>
+              <span className="text-sm font-medium text-font/30 w-5 tabular-nums">
+                {i + 1}
+              </span>
 
               {/* Avatar */}
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border border-font/10 shrink-0"
-                style={{ backgroundColor: d.color + "22", color: d.color }}
-              >
-                {d.initials}
-              </div>
+              {d?.photoUrl ? (
+                <img
+                  src={
+                    d?.photoUrl ??
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&background=${d.color.slice(1)}22&color=${d.color.slice(1)}`
+                  }
+                  alt={d?.name}
+                  className="w-16 h-16 rounded-full object-cover border border-font/10"
+                />
+              ) : (
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                  style={{
+                    backgroundColor: d?.color + "22",
+                    color: d?.color,
+                  }}
+                >
+                  {d?.initials}
+                </div>
+              )}
 
               {/* Nome + equipe */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-font truncate">{d.name}</p>
+                <p className="text-sm font-medium text-font truncate">
+                  {d.name}
+                </p>
                 <p className="text-xs text-font/40 truncate">{d.team}</p>
               </div>
 
@@ -178,21 +259,36 @@ const Pilotos = () => {
               {/* Stats */}
               <div className="hidden md:flex items-center gap-6 text-sm">
                 <div className="text-center">
-                  <p className="font-semibold text-font tabular-nums">{d.pts}</p>
-                  <p className="text-[10px] text-font/30 uppercase tracking-widest">Pts</p>
+                  <p className="font-semibold text-font tabular-nums">
+                    {d.pts}
+                  </p>
+                  <p className="text-[10px] text-font/30 uppercase tracking-widest">
+                    Pts
+                  </p>
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-font tabular-nums">{d.wins}</p>
-                  <p className="text-[10px] text-font/30 uppercase tracking-widest">Vitórias</p>
+                  <p className="font-semibold text-font tabular-nums">
+                    {d.wins}
+                  </p>
+                  <p className="text-[10px] text-font/30 uppercase tracking-widest">
+                    Vitórias
+                  </p>
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-font tabular-nums">{d.podiums}</p>
-                  <p className="text-[10px] text-font/30 uppercase tracking-widest">Pódios</p>
+                  <p className="font-semibold text-font tabular-nums">
+                    {d.podiums}
+                  </p>
+                  <p className="text-[10px] text-font/30 uppercase tracking-widest">
+                    Pódios
+                  </p>
                 </div>
               </div>
 
               {/* Cor da equipe */}
-              <div className="w-1 h-8 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+              <div
+                className="w-1 h-8 rounded-full shrink-0"
+                style={{ backgroundColor: d.color }}
+              />
             </div>
           ))}
         </div>
@@ -211,12 +307,23 @@ const Pilotos = () => {
             {/* Header do modal */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-font/10">
               <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border border-font/10"
-                  style={{ backgroundColor: selected.color + "22", color: selected.color }}
-                >
-                  {selected.initials}
-                </div>
+                {selected.photoUrl ? (
+                  <img
+                    src={selected.photoUrl}
+                    alt={selected.name}
+                    className="w-16 h-16 rounded-full object-cover border border-font/10"
+                  />
+                ) : (
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                    style={{
+                      backgroundColor: selected.color + "22",
+                      color: selected.color,
+                    }}
+                  >
+                    {selected.initials}
+                  </div>
+                )}
                 <div>
                   <p className="font-semibold text-font">{selected.name}</p>
                   <p className="text-xs text-font/40">{selected.team}</p>
@@ -232,7 +339,11 @@ const Pilotos = () => {
 
             {/* Stats */}
             <div className="px-5 py-4 grid grid-cols-3 gap-2">
-              <StatBox label="Pontos" value={selected.pts} color={selected.color} />
+              <StatBox
+                label="Pontos"
+                value={selected.pts}
+                color={selected.color}
+              />
               <StatBox label="Vitórias" value={selected.wins} />
               <StatBox label="Pódios" value={selected.podiums} />
               <StatBox label="Poles" value={selected.poles} />
@@ -246,10 +357,17 @@ const Pilotos = () => {
                 Posições por corrida
               </p>
               <ResponsiveContainer width="100%" height={180}>
-                <LineChart data={selected.positions} margin={{ top: 4, right: 8, left: -28, bottom: 0 }}>
+                <LineChart
+                  data={selected.positions}
+                  margin={{ top: 4, right: 8, left: -28, bottom: 0 }}
+                >
                   <XAxis
                     dataKey="round"
-                    tick={{ fontSize: 10, fill: "var(--color-font)", opacity: 0.4 }}
+                    tick={{
+                      fontSize: 10,
+                      fill: "var(--color-font)",
+                      opacity: 0.4,
+                    }}
                     axisLine={false}
                     tickLine={false}
                   />
@@ -257,7 +375,11 @@ const Pilotos = () => {
                     reversed
                     domain={[1, 20]}
                     ticks={[1, 5, 10, 15, 20]}
-                    tick={{ fontSize: 10, fill: "var(--color-font)", opacity: 0.4 }}
+                    tick={{
+                      fontSize: 10,
+                      fill: "var(--color-font)",
+                      opacity: 0.4,
+                    }}
                     axisLine={false}
                     tickLine={false}
                   />
@@ -267,14 +389,22 @@ const Pilotos = () => {
                       return (
                         <div className="bg-card border border-font/10 rounded-lg px-3 py-2 shadow-card text-xs">
                           <p className="text-font/50 mb-1">{label}</p>
-                          <p style={{ color: selected.color }} className="font-medium">
+                          <p
+                            style={{ color: selected.color }}
+                            className="font-medium"
+                          >
                             P{payload[0].value}
                           </p>
                         </div>
                       );
                     }}
                   />
-                  <ReferenceLine y={3} stroke={selected.color} strokeDasharray="3 3" opacity={0.3} />
+                  <ReferenceLine
+                    y={3}
+                    stroke={selected.color}
+                    strokeDasharray="3 3"
+                    opacity={0.3}
+                  />
                   <Line
                     type="monotone"
                     dataKey="position"
@@ -285,7 +415,9 @@ const Pilotos = () => {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <p className="text-[10px] text-font/30 text-center mt-1">Linha tracejada = pódio</p>
+              <p className="text-[10px] text-font/30 text-center mt-1">
+                Linha tracejada = pódio
+              </p>
             </div>
           </div>
         </div>

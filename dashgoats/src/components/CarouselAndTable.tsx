@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FLAG_URL } from "../constants/ConstantsF1";
 
 type Tab = "drivers" | "teams";
 
@@ -10,6 +11,7 @@ interface Driver {
   nationality: string;
   initials: string;
   color: string;
+  photoUrl?: string | null;
 }
 
 interface Team {
@@ -18,6 +20,7 @@ interface Team {
   nationality: string;
   initials: string;
   color: string;
+  photoUrl?: string | null;
 }
 
 interface CarouselAndTableProps {
@@ -65,19 +68,37 @@ const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
         <div className="bg-card rounded-xl border border-font/10 overflow-hidden">
           <div className="px-4 py-3 border-b border-font/10">
             <span className="text-[11px] font-medium text-font/50 uppercase tracking-widest">
-              {isDrivers ? "Pilotos 2025" : "Times 2025"}
+              {isDrivers
+                ? `Pilotos ${new Date().getFullYear()}`
+                : `Times ${new Date().getFullYear()}`}
             </span>
           </div>
 
           <div className="flex flex-col items-center px-6 py-8 transition-all duration-500 ease-in-out">
-            <div
-              className="w-24 h-24 rounded-full flex items-center justify-center text-2xl font-medium mb-4 border border-font/10 transition-colors duration-500 ease-in-out"
-              style={{ backgroundColor: item.color + "22", color: item.color }}
-            >
-              {item.initials}
-            </div>
+              {item?.photoUrl ? (
+                <img
+                  src={
+                    item?.photoUrl ??
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=${item.color.slice(1)}22&color=${item.color.slice(1)}`
+                  }
+                  alt={item?.name}
+                  className="w-16 h-16 rounded-full object-cover border border-font/10"
+                />
+              ) : (
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                  style={{
+                    backgroundColor: item?.color + "22",
+                    color: item?.color,
+                  }}
+                >
+                  {item?.initials}
+                </div>
+              )}
             <p className="text-base font-medium text-font">{item.name}</p>
-            <p className="text-3xl font-medium text-font mt-4 tabular-nums">{item.pts}</p>
+            <p className="text-3xl font-medium text-font mt-4 tabular-nums">
+              {item.pts}
+            </p>
             <p className="text-xs text-font/40 mt-1">pontos</p>
           </div>
 
@@ -96,7 +117,9 @@ const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
                   key={i}
                   onClick={() => setCurrent(i)}
                   className={`rounded-full transition-all duration-300 ease-in-out ${
-                    i === current ? "w-2 h-2 scale-125" : "w-1.5 h-1.5 bg-font/20 hover:bg-font/40"
+                    i === current
+                      ? "w-2 h-2 scale-125"
+                      : "w-1.5 h-1.5 bg-font/20 hover:bg-font/40"
                   }`}
                   style={i === current ? { backgroundColor: item.color } : {}}
                 />
@@ -124,11 +147,15 @@ const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-font/10">
-                  <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest w-8">#</th>
+                  <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest w-8">
+                    #
+                  </th>
                   <th className="text-left px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">
                     {isDrivers ? "Piloto" : "Time"}
                   </th>
-                  <th className="text-right px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">Pts</th>
+                  <th className="text-right px-4 py-2.5 text-[11px] font-medium text-font/40 uppercase tracking-widest">
+                    Pts
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -140,14 +167,31 @@ const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
                       i === current ? "bg-card-hover" : "hover:bg-card-hover"
                     }`}
                   >
-                    <td className="px-4 py-2.5 font-medium text-font/40 tabular-nums">{i + 1}</td>
+                    <td className="px-4 py-2.5 font-medium text-font/40 tabular-nums">
+                      {i + 1}
+                    </td>
                     <td className="px-4 py-2.5 text-font">
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
-                        <span className={i === current ? "font-medium" : ""}>{d.name}</span>
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{ backgroundColor: d.color }}
+                        />
+                        <img
+                          src={FLAG_URL(d.nationality)}
+                          alt={d.nationality}
+                          className="w-6 h-4 rounded-sm object-cover opacity-80"
+                          onError={(e) =>
+                            (e.currentTarget.style.display = "none")
+                          }
+                        />
+                        <span className={i === current ? "font-medium" : ""}>
+                          {d.name}
+                        </span>
                       </div>
                     </td>
-                    <td className="px-4 py-2.5 text-right font-medium text-font tabular-nums">{d.pts}</td>
+                    <td className="px-4 py-2.5 text-right font-medium text-font tabular-nums">
+                      {d.pts}
+                    </td>
                   </tr>
                 ))}
               </tbody>
