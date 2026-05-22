@@ -99,7 +99,7 @@ export const useF1Data = () => {
             initials: c.Constructor.name.slice(0, 2).toUpperCase(),
             color: TEAM_COLORS[c.Constructor.name] ?? "#888",
             constructorId: c.Constructor.constructorId,
-            logoUrl: TEAM_LOGO_URL(c.Constructor.constructorId),
+            photoUrl: TEAM_LOGO_URL[c.Constructor.constructorId] ?? null,
           })),
         );
 
