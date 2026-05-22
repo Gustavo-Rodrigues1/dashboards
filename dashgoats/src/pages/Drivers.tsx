@@ -32,7 +32,7 @@ const StatBox = ({
   </div>
 );
 
-const Pilotos = () => {
+const Drivers = () => {
   const { drivers, loading, error } = useDriversData();
   const [selected, setSelected] = useState<(typeof drivers)[0] | null>(null);
   const [compareA, setCompareA] = useState<(typeof drivers)[0] | null>(null);
@@ -426,4 +426,4 @@ const Pilotos = () => {
   );
 };
 
-export default Pilotos;
+export default Drivers;
