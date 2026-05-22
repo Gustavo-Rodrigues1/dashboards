@@ -1,26 +1,10 @@
-// src/components/Charts.tsx
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
   BarChart, Bar,
 } from "recharts";
 
-interface Driver {
-  name: string;
-  color: string;
-}
-
-interface Team {
-  name: string;
-  pts: number;
-  wins?: number;
-  color: string;
-}
-
-interface RacePoint {
-  round: string;
-  [driverName: string]: number | string;
-}
+import type { Driver, Team, RacePoint } from "../types/F1Types";
 
 interface ChartsProps {
   drivers: Driver[];

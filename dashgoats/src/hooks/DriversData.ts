@@ -1,22 +1,6 @@
 import { useEffect, useState } from "react";
 import { TEAM_COLORS } from "../constants/ConstantsF1";
-
-interface DriverDetail {
-  name: string;
-  team: string;
-  pts: number;
-  wins: number;
-  photoUrl?: string | null;
-  podiums: number;
-  poles: number;
-  dnfs: number;
-  nationality: string;
-  initials: string;
-  color: string;
-  driverId: string;
-  number: string;
-  positions: { round: string; position: number }[];
-}
+import type { DriverDetail } from "../types/F1Types";
 
 export const useDriversData = () => {
   const [drivers, setDrivers] = useState<DriverDetail[]>([]);

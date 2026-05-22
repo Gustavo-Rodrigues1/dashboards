@@ -1,33 +1,7 @@
 import { useEffect, useState } from "react";
 import { TEAM_COLORS } from "../constants/ConstantsF1";
 import { TEAM_LOGO_URL } from "../constants/ConstantsF1";
-
-interface Driver {
-  name: string;
-  team: string;
-  pts: number;
-  photoUrl?: string | null;
-  driverId: string;
-  nationality: string;
-  initials: string;
-  color: string;
-}
-
-interface Team {
-  name: string;
-  pts: number;
-  wins: number;
-  nationality: string;
-  initials: string;
-  constructorId: string;
-  logoUrl?: string | null;
-  color: string;
-}
-
-interface RacePoint {
-  round: string;
-  [driverName: string]: number | string;
-}
+import type { Driver, Team, RacePoint } from "../types/F1Types";
 
 export const useF1Data = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);

@@ -1,27 +1,9 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FLAG_URL } from "../constants/ConstantsF1";
+import type { Driver, Team } from "../types/F1Types";
 
 type Tab = "drivers" | "teams";
-
-interface Driver {
-  name: string;
-  team: string;
-  pts: number;
-  nationality: string;
-  initials: string;
-  color: string;
-  photoUrl?: string | null;
-}
-
-interface Team {
-  name: string;
-  pts: number;
-  nationality: string;
-  initials: string;
-  color: string;
-  photoUrl?: string | null;
-}
 
 interface CarouselAndTableProps {
   drivers: Driver[];
