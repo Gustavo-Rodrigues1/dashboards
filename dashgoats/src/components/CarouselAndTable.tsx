@@ -64,11 +64,11 @@ const CarouselAndTable = ({ drivers, teams }: CarouselAndTableProps) => {
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=${item.color.slice(1)}22&color=${item.color.slice(1)}`
                   }
                   alt={item?.name}
-                  className="w-16 h-16 rounded-full object-cover border border-font/10"
+                  className="w-25 h-25 rounded-full object-cover border border-font/10"
                 />
               ) : (
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
+                  className="w-25 h-25 rounded-full flex items-center justify-center text-xl font-semibold border border-font/10"
                   style={{
                     backgroundColor: item?.color + "22",
                     color: item?.color,
