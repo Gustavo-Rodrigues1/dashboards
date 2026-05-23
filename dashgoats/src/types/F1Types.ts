@@ -1,4 +1,4 @@
-interface Driver {
+export interface Driver {
   name: string;
   team: string;
   pts: number;
@@ -31,5 +31,20 @@ export interface DriverDetail extends Driver {
   poles: number;
   dnfs: number;
   number: string;
+  positions: { round: string; position: number }[];
+}
+
+export interface TeamDetail extends Team {
+  drivers: {
+    name: string;
+    pts: number;
+    initials: string;
+    photoUrl: string | null;
+  }[];
+  driverContribution: {
+    name: string;
+    pts: number;
+    color: string;
+  }[];
   positions: { round: string; position: number }[];
 }
